@@ -1,0 +1,17 @@
+câu 1:
+
+SELECT *
+FROM `tbl_sinhvien`
+WHERE tuoi > 20 AND tuoi < 30
+	
+câu 2:
+
+SELECT *
+FROM `tbl_sinhvien`
+WHERE tuoi < 20 OR tuoi > 30
+
+câu 3:
+
+SELECT *
+FROM `tbl_sinhvien`
+WHERE tuoi = (SELECT MAX(tuoi) FROM `tbl_sinhvien`)
