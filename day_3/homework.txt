@@ -1,0 +1,36 @@
+1. 
+SELECT tbl_giangvien.maGV, tbl_giangvien.tenGV, tbl_khoa.tenKhoa
+FROM tbl_giangvien JOIN tbl_khoa
+ON tbl_giangvien.maKhoa = tbl_khoa.maKhoa;
+2.
+SELECT tbl_giangvien.maGV, tbl_giangvien.tenGV, tbl_khoa.tenKhoa
+FROM tbl_giangvien JOIN tbl_khoa
+ON tbl_giangvien.maKhoa = tbl_khoa.maKhoa
+WHERE tbl_giangvien.maKhoa = 'Geo';
+3.
+SELECT COUNT(id) AS soSinhVienCNSH
+FROM `tbl_sinhvien`
+WHERE maKhoa = 'Bio';
+4.
+SELECT maSV,tenSV,namSinh
+FROM tbl_sinhvien
+WHERE maKhoa ='Math';
+5.
+SELECT COUNT(id) AS soGVkhoaCNSH
+FROM tbl_giangvien
+WHERE maKhoa = 'Bio';
+6.
+SELECT *
+FROM tbl_sinhvien LEFT JOIN tbl_huongdan
+ON tbl_sinhvien.maSV = tbl_huongdan.maSV
+WHERE tbl_huongdan.maSV IS NULL;
+7.
+SELECT tbl_khoa.maKhoa, tbl_khoa.tenKhoa, COUNT(tbl_giangvien.id) AS soGiangVien
+FROM tbl_khoa JOIN tbl_giangvien
+ON tbl_khoa.maKhoa = tbl_giangvien.maKhoa
+GROUP BY tbl_giangvien.maKhoa;
+8.
+SELECT tbl_khoa.sdt
+FROM tbl_khoa JOIN tbl_sinhvien
+ON tbl_khoa.maKhoa = tbl_sinhvien.maKhoa
+WHERE tbl_sinhvien.tenSV LIKE "Nguyen Van A";
