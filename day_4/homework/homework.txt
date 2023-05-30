@@ -1,0 +1,68 @@
+1.
+SELECT tbl_giangvien.id, tbl_giangvien.hoTenGV, tbl_khoa.tenKhoa
+FROM tbl_giangvien JOIN tbl_khoa ON tbl_giangvien.maKhoa = tbl_khoa.id;
+2.
+SELECT tbl_giangvien.id, tbl_giangvien.hoTenGV, tbl_khoa.tenKhoa
+FROM tbl_giangvien JOIN tbl_khoa ON tbl_giangvien.maKhoa = tbl_khoa.id
+WHERE tbl_giangvien.id IN (
+    SELECT maGV
+    FROM tbl_huongdan
+    GROUP BY maGV HAVING COUNT(id) >= 3
+);
+3.1
+
+SELECT *
+FROM tbl_sinhvien
+WHERE tbl_sinhvien.id IN (
+	SELECT tbl_huongdan.id
+    FROM tbl_huongdan
+    WHERE tbl_huongdan.ketQua IS NULL
+); 
+
+3.2
+SELECT tbl_khoa.sdt
+FROM tbl_khoa
+WHERE tbl_khoa.id = (
+	SELECT tbl_sinhvien.maKhoa
+    FROM tbl_sinhvien
+    WHERE tbl_sinhvien.hoTenSV = 'Le Van Sao'
+);
+
+
+
+4.
+SELECT tbl_detai.id, tbl_detai.tenDT
+FROM tbl_detai
+WHERE tbl_detai.id IN (
+	SELECT tbl_huongdan.maDT
+    FROM tbl_huongdan
+    GROUP BY tbl_huongdan.maDT
+    HAVING COUNT(tbl_huongdan.id) > 2
+)
+
+5.
+SELECT tbl_detai.id, tbl_detai.tenDT 
+FROM `tbl_detai`
+WHERE tbl_detai.kinhPhi = (
+	SELECT MAX(kinhPhi)
+    FROM tbl_detai
+)
+6.
+SELECT tbl_khoa.tenKhoa, COUNT(tbl_sinhvien.id) AS soSV
+FROM tbl_khoa JOIN tbl_sinhvien
+ON tbl_khoa.id = tbl_sinhvien.maKhoa
+GROUP BY tbl_khoa.id;
+
+7.
+
+SELECT tbl_sinhvien.id, tbl_sinhvien.hoTenSV, tbl_huongdan.ketQua
+FROM tbl_sinhvien 
+JOIN tbl_huongdan ON tbl_sinhvien.id = tbl_huongdan.id
+JOIN tbl_khoa ON tbl_sinhvien.maKhoa = tbl_khoa.id
+WHERE tbl_khoa.tenKhoa = 'Dia ly va QLTN'
+8.
+
+SELECT tbl_sinhvien.id, tbl_sinhvien.hoTenSV, YEAR(CURRENT_DATE()) - tbl_sinhvien.namSinh AS tuoi
+FROM tbl_sinhvien JOIN tbl_khoa
+ON tbl_sinhvien.maKhoa = tbl_khoa.id
+WHERE tbl_khoa.tenKhoa = 'Toan'

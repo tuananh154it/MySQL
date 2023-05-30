@@ -1,0 +1,82 @@
+CREATE DATABASE thuctap;
+USE thuctap;
+
+CREATE TABLE tbl_khoa(
+	id int PRIMARY KEY AUTO_INCREMENT ,
+    tenKhoa varchar(50) NOT NULL,
+    sdt char(12)
+);
+
+CREATE TABLE tbl_giangvien(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    hoTenGV varchar(50) NOT NULL,
+    luong float,
+    maKhoa int,
+    CONSTRAINT fk_giangvien_khoa
+    FOREIGN KEY (maKhoa) REFERENCES tbl_khoa(id)
+);
+
+CREATE TABLE tbl_sinhvien(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    hoTenSV varchar(50) NOT NULL,
+    maKhoa int NOT NULL,
+    namSinh varchar(4),
+    queQuan varchar(255),
+    CONSTRAINT fk_sinhvien_khoa
+    FOREIGN KEY (maKhoa) REFERENCES tbl_khoa(id)
+);
+
+CREATE TABLE tbl_detai(
+	id varchar(10) PRIMARY KEY,
+    tenDT varchar(50) NOT NULL,
+    kinhPhi float,
+    noiThucTap varchar(255)
+);
+
+CREATE TABLE tbl_huongdan(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    maDT varchar(10) NOT NULL,
+    maGV int NOT NULL,
+    ketQua float ,
+    CONSTRAINT fk_huongdan_giangvien
+    FOREIGN KEY(maGV) REFERENCES tbl_giangvien(id)
+);
+
+
+INSERT INTO tbl_khoa(tenKhoa,sdt)
+VALUES
+	('Dia ly va QLTN','3855413'),
+	('Toan','3855411'),
+	('Cong nghe Sinh hoc','3855412');
+INSERT INTO tbl_giangvien
+VALUES
+	(11,'Thanh Xuan',700,1),
+	(12,'Thu Minh',500,2),
+	(13,'Chu Tuan',650,1),
+	(14,'Le Thi Lan',500,3),
+	(15,'Tran Xoay',900,2); 
+INSERT INTO tbl_sinhvien
+VALUES
+(1,'Le Van Sao',3,1990,'Nghe An'),
+(2,'Nguyen Thi My',1,1990,'Thanh Hoa'), 
+(3,'Bui Xuan Duc',2,1992,'Ha Noi'), 
+(4,'Nguyen Van Tung',3,null,'Ha Tinh'), 
+(5,'Le Khanh Linh',3,1989,'Ha Nam'), 
+(6,'Tran Khac Trong',1,1991,'Thanh Hoa'), 
+(7,'Le Thi Van',2,null,'null'), 
+(8,'Hoang Van Duc',3,1992,'Nghe An'); 
+INSERT INTO tbl_detai
+VALUES 
+('Dt01','GIS',100,'Nghe An'), 
+('Dt02','ARC GIS',500,'Nam Dinh'),
+('Dt03','Spatial DB',100, 'Ha Tinh'), 
+('Dt04','MAP',300,'Quang Binh' ); 
+INSERT INTO tbl_huongdan 
+VALUES 
+(1,'Dt01',13,8), 
+(2,'Dt03',14,0), 
+(3,'Dt03',12,10),
+(5,'Dt04',14,7),
+(6,'Dt01',13,Null),
+(7,'Dt04',11,10), 
+(8,'Dt03',15,6); 
