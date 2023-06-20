@@ -138,7 +138,8 @@ CREATE TABLE lessons(
     status varchar(50),
     create_at date DEFAULT CURRENT_TIMESTAMP,
     update_at date,
-    delete_at date
+    delete_at date,
+	FOREIGN KEY (class_id) REFERENCES classes(id)
 );
 INSERT INTO lessons (name, class_id, status, create_at, update_at, delete_at) VALUES
 ('Bài giảng Java cơ bản - L1', 1, 'Hoạt động', '2023-06-20', NULL, NULL),

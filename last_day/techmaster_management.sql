@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 20, 2023 at 05:33 PM
+-- Generation Time: Jun 20, 2023 at 06:16 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -388,7 +388,8 @@ ALTER TABLE `function_roles`
 -- Indexes for table `lessons`
 --
 ALTER TABLE `lessons`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `class_id` (`class_id`);
 
 --
 -- Indexes for table `roles`
@@ -508,6 +509,12 @@ ALTER TABLE `exercises`
 ALTER TABLE `function_roles`
   ADD CONSTRAINT `function_roles_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   ADD CONSTRAINT `function_roles_ibfk_2` FOREIGN KEY (`function_id`) REFERENCES `functions` (`id`);
+
+--
+-- Constraints for table `lessons`
+--
+ALTER TABLE `lessons`
+  ADD CONSTRAINT `lessons_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`);
 
 --
 -- Constraints for table `solutions`
