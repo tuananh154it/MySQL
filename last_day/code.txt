@@ -1,0 +1,211 @@
+
+
+CREATE DATABASE techmaster_management;
+USE techmaster_management;
+
+-- bảng phân quyền ----------------------------
+CREATE TABLE roles(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL UNIQUE
+);
+INSERT INTO roles (name) VALUES
+('admin'),
+('teacher'),
+('student'),
+('staff');
+--  các chức năng có trong hệ thống
+CREATE TABLE functions(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL UNIQUE
+);
+INSERT INTO functions (name) VALUES
+('Quản lý người dùng'),
+('Quản lý khoá học'),
+('Quản lý lớp học'),
+('Quản lý bài giảng'),
+('Quản lý điểm danh'),
+('Quản lý bài tập');
+-- bảng trung gian quyền -> chức năng
+CREATE TABLE function_roles(
+	role_id int NOT NULL,
+    function_id int NOT NULL,
+    PRIMARY KEY(role_id, function_id),
+    FOREIGN KEY(role_id) REFERENCES roles(id),
+    FOREIGN KEY(function_id) REFERENCES functions(id)
+);
+INSERT INTO function_roles (role_id, function_id) VALUES
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6),
+(2, 2), (2, 3), (2, 4), (2, 5),
+(3, 5), (3, 6),
+(4, 1), (4, 6);
+-- nguoi dung trong he thong ------------------------
+CREATE TABLE users(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL,
+    phoneNumber varchar(15) NOT NULL,
+    gmail varchar(100) NOT NULL UNIQUE,
+    password varchar(30) NOT NULL,
+    cccd varchar(15) NOT NULL UNIQUE,
+    address varchar(255),
+    role_id int NOT NULL,
+    status varchar(50),
+    create_at date DEFAULT CURRENT_TIMESTAMP,
+    update_at date,
+    delete_at date,
+    CONSTRAINT fk_user_role	FOREIGN KEY(role_id) REFERENCES roles(id)
+);
+INSERT INTO users (name, phoneNumber, gmail, password, cccd, address, role_id, status, create_at, update_at, delete_at) VALUES
+('Nguyễn Văn A', '0987654321', 'nguyenvana@gmail.com', 'password123', '123456789012345', 'Hà Nội', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Trần Thị B', '0123456789', 'tranthib@gmail.com', 'password456', '234567890123456', 'Hồ Chí Minh', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lê Quang C', '0909090909', 'lequangc@gmail.com', 'password789', '345678901234567', 'Đà Nẵng', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Phạm Thị D', '0777777777', 'phamthid@gmail.com', 'passwordabc', '456789012345678', 'Hải Phòng', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Hoàng Văn E', '0888888888', 'hoangvane@gmail.com', 'passworddef', '567890123456789', 'Bình Dương', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Nguyễn Thị F', '0999999999', 'nguyenthif@gmail.com', 'passwordxyz', '678901234567890', 'Vũng Tàu', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Võ Văn G', '0666666666', 'vovang@gmail.com', 'passwordmno', '789012345678901', 'Cần Thơ', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Trương Thị H', '0555555555', 'truongthih@gmail.com', 'passwordpqr', '890123456789012', 'An Giang', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Mai Văn I', '0333333333', 'maivani@gmail.com', 'passwordstu', '901234567890123', 'Nghệ An', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Đinh Thị K', '0444444444', 'dinhthik@gmail.com', 'passwordvwx', '012345678901234', 'Hà Tĩnh', 1, 'Hoạt động', '2023-06-20', NULL, NULL);
+
+-- khoá học : một khoá bao gồm nhiều lớp học -----------------------------
+CREATE TABLE courses(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL,
+    status varchar(50),
+    create_at date DEFAULT CURRENT_TIMESTAMP,
+    update_at date,
+    delete_at date
+);
+INSERT INTO courses (name, status, create_at, update_at, delete_at) VALUES
+('Khóa học Java cơ bản', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học C++ nâng cao', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Python căn bản', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Web Development', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Machine Learning', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Data Science', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học UX/UI Design', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Digital Marketing', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Project Management', 'Hoạt động', '2023-06-20', NULL, NULL),
+('Khóa học Agile Development', 'Hoạt động', '2023-06-20', NULL, NULL);
+
+-- lớp học: một lớp học bao gồm nhiều bài giảng, nhiều học viên, nhiều giáo viên -------------------------------
+CREATE TABLE classes(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL,
+    course_id int NOT NULL,
+    status varchar(50),
+    create_at date DEFAULT CURRENT_TIMESTAMP,
+    update_at date,
+    delete_at date,
+    CONSTRAINT fk_class_course FOREIGN KEY(course_id) REFERENCES courses(id)
+);
+INSERT INTO classes (name, course_id, status, create_at, update_at, delete_at) VALUES
+('Lớp học Java cơ bản - A1', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Java cơ bản - A2', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học C++ nâng cao - B1', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học C++ nâng cao - B2', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Python căn bản - C1', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Python căn bản - C2', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Web Development - D1', 4, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Web Development - D2', 4, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Machine Learning - E1', 5, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Lớp học Machine Learning - E2', 5, 'Hoạt động', '2023-06-20', NULL, NULL);
+
+-- bảng trung gian giữa người dùng ( bao gồm học viên, giảng viên,...) với lớp
+CREATE TABLE student_classes (
+  user_id INT,
+  class_id INT,
+  PRIMARY KEY (user_id, class_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (class_id) REFERENCES classes(id)
+);
+INSERT INTO student_classes (user_id, class_id) VALUES
+(1, 1),
+(2, 1),
+(3, 2),
+(4, 2),
+(5, 3),
+(6, 3),
+(7, 4),
+(8, 4),
+(9, 5),
+(10, 5);
+
+-- bài giảng: tham chiếu đến lớp học ----------------------------------------------------------
+CREATE TABLE lessons(
+	id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(50) NOT NULL,
+    class_id int NOT NULL,
+    status varchar(50),
+    create_at date DEFAULT CURRENT_TIMESTAMP,
+    update_at date,
+    delete_at date
+);
+INSERT INTO lessons (name, class_id, status, create_at, update_at, delete_at) VALUES
+('Bài giảng Java cơ bản - L1', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Java cơ bản - L2', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng C++ nâng cao - L1', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng C++ nâng cao - L2', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Python căn bản - L1', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Python căn bản - L2', 3, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Web Development - L1', 4, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Web Development - L2', 4, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Machine Learning - L1', 5, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài giảng Machine Learning - L2', 5, 'Hoạt động', '2023-06-20', NULL, NULL);
+
+-- điểm danh -------------------------------------------------------
+CREATE TABLE attendance (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  student_id INT NOT NULL,
+  class_id INT NOT NULL,
+  attendance_date DATE NOT NULL,
+  status VARCHAR(50),
+  FOREIGN KEY (student_id) REFERENCES users(id),
+  FOREIGN KEY (class_id) REFERENCES classes(id)
+);
+INSERT INTO attendance (student_id, class_id, attendance_date, status) VALUES
+(1, 1, '2023-06-20', 'Đi học'),
+(2, 1, '2023-06-20', 'Đi học'),
+(3, 2, '2023-06-20', 'Đi học'),
+(4, 2, '2023-06-20', 'Đi học'),
+(5, 3, '2023-06-20', 'Đi học'),
+(6, 3, '2023-06-20', 'Đi học'),
+(7, 4, '2023-06-20', 'Đi học'),
+(8, 4, '2023-06-20', 'Đi học'),
+(9, 5, '2023-06-20', 'Đi học'),
+(10, 5, '2023-06-20', 'Đi học');
+
+-- bai tap, cham diem --------------------------
+CREATE TABLE exercises(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    title text,
+    content text,
+   	class_id int NOT NULL,
+	status varchar(50),
+    create_at date DEFAULT CURRENT_TIMESTAMP,
+    update_at date,
+    delete_at date,
+	FOREIGN KEY (class_id) REFERENCES classes(id)
+);
+INSERT INTO exercises (title, content, class_id, status, create_at, update_at, delete_at) VALUES
+('Bài tập Java cơ bản - E1', 'Viết chương trình tính tổng hai số', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài tập Java cơ bản - E2', 'Viết chương trình in ra dãy Fibonacci', 1, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài tập C++ nâng cao - E1', 'Viết chương trình quản lý danh sách sinh viên', 2, 'Hoạt động', '2023-06-20', NULL, NULL),
+('Bài tập C++ nâng cao - E2', 'Viết chương trình sắp xếp mảng số nguyên', 2, 'Hoạt động', '2023-06-20', NULL, NULL);
+
+-- học viên nộp bài tập ----------------------------
+CREATE TABLE solutions(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id int NOT NULL,
+    exercises_id int NOT NULL,
+	link text NOT NULL,
+	note text,
+    submission_time  time DEFAULT CURRENT_TIMESTAMP,
+    score float ,
+    FOREIGN KEY (student_id) REFERENCES users(id),
+    FOREIGN KEY (exercises_id) REFERENCES exercises(id)
+);
+INSERT INTO solutions (student_id, exercises_id, link, note, submission_time, score) VALUES
+(1, 1, 'https://example.com/solution1', 'Bài tập đã hoàn thành', '2023-06-20 09:30:00', 9.5),
+(2, 1, 'https://example.com/solution2', 'Bài tập đã hoàn thành', '2023-06-20 09:35:00', 8.75),
+(3, 2, 'https://example.com/solution3', 'Bài tập chưa hoàn thành', '2023-06-20 10:00:00', NULL),
+(4, 2, 'https://example.com/solution4', 'Bài tập đã hoàn thành', '2023-06-20 10:10:00', 7.5);
